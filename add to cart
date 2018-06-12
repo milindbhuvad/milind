@@ -1,0 +1,73 @@
+<table class="shop_table shop_table_responsive cart">
+    <thead>
+        <tr>
+            <th class="product-thumbnail">Image</th>
+            <th class="product-name">Product </th>
+            <th class="product-price">Price</th>
+            <th class="product-quantity">Quantity</th>
+            <th class="product-subtotal">Total</th>
+            <th class="product-remove">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php
+            $pro_id = $_COOKIE['product_id'];   
+            $pro_id = explode(',', $pro_id);
+            $cnt = count(explode(",", $_COOKIE['product_id']));
+            foreach ($pro_id as $val) {
+                $ans = "SELECT * FROM wm_products WHERE pro_id='$val'";
+                $result = $conn->query($ans);
+                $totalprice=0;
+                $totalqunty=0;
+                while($row = $result->fetch_assoc()){
+
+                    $cnt=$pro_id[$val]['quantity'];
+                    $sub_total=$row['pro_price']*$cnt;  
+                ?>
+                    <tr class="cart_item">
+                        <td class="product-thumbnail">
+                            <a href="single-product.html"><img src="<?php echo $row['pro_img_path']; ?>" alt="" width="180" height="180"></a>
+                        </td>
+                        <td data-title="Product" class="product-name">
+                            <a href="single-product.html"><?php echo $row['pro_name']; ?></a>
+                        </td>
+                        <td data-title="Price" class="product-price">
+                            <span class="amount">Rs. <?php echo $row['pro_price']; ?></span>
+                        </td>
+                        <td data-title="Quantity" class="product-quantity">
+                            <div class="quantity buttons_added">
+                                <input class="minus" value="-" onclick='javascript: subtractQty();' type="button">
+                                <label>Quantity:</label>
+                                <input id='qty' size="4" class="input-text qty text" title="Qty" value="{$cnt}" name="quantity" max="29" min="0" step="1" type="number">
+                                <input class="plus" value="+" onclick='javascript: document.getElementById("qty").value++;' type="button">
+                            </div>
+                        </td>
+                        <td data-title="Total" class="product-subtotal">
+                            <span class="amount">Rs. <?php echo $sub_total; ?></span>
+                        </td>
+                        <td class="product-remove">
+                            <a class="remove remove_cart" href="#" dataid="<?php echo $row['pro_id']; ?>">×</a>
+                        </td>
+                    </tr>
+                <?php 
+                }                                   
+            }
+        ?>
+        <tr>
+            <td class="actions" colspan="6">
+
+            <div class="coupon">
+              <label for="coupon_code">Coupon:</label> <input placeholder="Coupon code" value="" id="coupon_code" class="input-text" name="coupon_code" type="text"> <input value="Apply Coupon" name="apply_coupon" class="button" type="submit">
+            </div>
+
+            <input value="Update Cart" name="update_cart" class="button" type="button">
+
+            <div class="wc-proceed-to-checkout">
+              <a class="checkout-button button alt wc-forward" href="checkout.php">Proceed to Checkout</a>
+            </div>
+
+            <input value="1eafc42c5e" name="_wpnonce" id="_wpnonce" type="hidden"><input value="/electro/cart/" name="_wp_http_referer" type="hidden">
+            </td>
+        </tr>
+    </tbody>
+</table>
